@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.4"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
+    <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+
+    <!-- <style>
+      .column {
+          width: 50%;  /* Each column takes up half the width of its container */
+          float: left;  /* This will align them side by side */
+          padding: 10px;  /* Padding for some internal spacing */
+          box-sizing: border-box; /* Includes padding and border in the width */
+      }
+
+      p {
+    height: 5%; /* Fixed height */
+    overflow: auto; /* Adds scrollbars if content exceeds dimensions */
+}
+
+  </style> -->
+
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px; /* Adjust the gap between columns as needed */
+        width: 75%; /* Set the container width to 80% */
+        margin: 0 auto; /* Center the container */
+    }
+    .container p {
+        font-size: 18px; /* Adjust the font size as needed */
+        color: black; /* Adjust the color as needed */
+        margin: 0;
+        padding: 10px;
+        box-sizing: border-box;
+        text-align: center; /* Ensure all text is centered */
+    }
+    .grid-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90px; /* Adjust the height as needed to ensure uniform row height */
+    }
+</style>
+
+  </head>
+  <body>
+  
+  <script>
+
+// initialize jsPsych
+var jsPsych = initJsPsych({
+    show_progress_bar: true,
+    message_progress_bar: "",
+    on_finish: function() {
+        jsPsych.data.displayData('json');
+    }
+})
+
+// create timeline
+var timeline = [];
+
+// Fetch JSON data. Make sure jspsych vars are included in the function, so the experiment does not start before the data is loaded.
+var scenarios; // This will store the fetched JSON data
+
+fetch("https://res.cloudinary.com/irresearch/raw/upload/v1715603307/myojdwft7g3bfua5cd1e.json")
+.then(response => response.json())
+.then(data => {
+    scenarios = data; // Store the data in the global variable
+    // console.log('Data loaded successfully:', scenarios.slice(0, 100)); // Optional: Log the data to console
+
+  // Intro page
+  var introduction = {
+    type: jsPsychHtmlButtonResponse, 
+    stimulus: `
+    <p>Dobrodošli k raziskavi projekta JUDGEMERIT.</p>
+    `, 
+    choices: ["Naprej"]
+  };
+  timeline.push(introduction);
+
+// filter for user 1
+var scenarios_user1 = scenarios.filter(item => item.respID === 1);
+console.log(scenarios_user1);
+
+// conjoint instructions
+var conjoint_instructions = {
+    type: jsPsychHtmlButtonResponse, 
+    stimulus: `
+    <p style="width:800px; text-align:justify">
+      Raziskava poteka na naslednji način. Na zaslonu se bo prikazal opis dveh kandidatk_ov za službo okrajne_ga kazenske_ga sodnice_ka.
+      Opis je sestavljen iz več lastnosti, ki so na vsaki strani prikazane v naključnem vrstnem redu.
+      Vaša naloga je, da na podlagi opisov izmed dveh kandidatov_k izberete tistega_o, 
+      ki se vam zdi <b>primernejši_a za službo okrajne_ga kazenske_ga sodnice_ka</b>.
+      <br><br>
+      Če se vam zdi primernejši_a kandidat_ka opisan_a na levi strani zaslona, kliknite na gumb "Oseba na levi"; in obratno, 
+      če se vam zdi primernejši_a kandidat_ka opisan_a na desni strani zaslona, kliknite na gumb "Oseba na desni." 
+      <br><br>
+      Ko se odločite za eno izmed oseb, 
+      se bo na novi strani prikazal nov par kandidatov_k, med katerima se morate ponovno odločiti. 
+      Na ta način nadaljujete, dokler niste izbrali primernejšega_o kandidata_ko za vse prikazane pare kandidatov_k.
+      <br><br>
+      Ko ste pripravljeni za začetek raziskave, kliknite na gumb "Naprej".
+    </p>
+    `, 
+    choices: ["Naprej"]
+  };
+  timeline.push(conjoint_instructions);
+
+for(let i = 1; i < 6; i++){
+
+var individual_scenarios = scenarios.filter(item => item.obsID === i);
+
+var individual_scenarios_alt1 = individual_scenarios.filter(item => item.altID === 1);
+var individual_scenarios_alt2 = individual_scenarios.filter(item => item.altID === 2);
+
+// alternative 1 (shown on the left)
+
+// gender specific text
+var gen_spec_text_alt1 = [];
+
+if (individual_scenarios_alt1[0].gender == "Ženska") {
+  gen_spec_text_alt1.push("a");
+  gen_spec_text_alt1.push("ka");
+  gen_spec_text_alt1.push("njene");
+  gen_spec_text_alt1.push("Njene");
+} else {
+  gen_spec_text_alt1.push("");
+  gen_spec_text_alt1.push("");
+  gen_spec_text_alt1.push("njegove");
+  gen_spec_text_alt1.push("Njegove");
+};
+
+// CV extra specific text
+var cv_extra_spec_alt1 = [];
+
+if (individual_scenarios_alt1[0].cv_extra == "v zakonski zvezi in ima tri otroke, ki obiskujejo šolo") {
+  cv_extra_spec_alt1.push("je");
+} else {
+  cv_extra_spec_alt1.push("")
+};
+
+// "experience" specific text
+var lectures_spec_alt1 = [];
+
+if (individual_scenarios_alt1[0].education_publications == "Predava na Centru za izobraževanje v pravosodju (CIP). Objavil" && individual_scenarios_alt1[0].gender == "Ženska") {
+  lectures_spec_alt1.push("a je 12 člankov v reviji Pravna praksa; je soavtorica komentarja zakona");
+} else if (individual_scenarios_alt1[0].education_publications == "Predava na Centru za izobraževanje v pravosodju (CIP). Objavil" && individual_scenarios_alt1[0].gender == "Moški"){
+  lectures_spec_alt1.push(" je 12 člankov v reviji Pravna praksa; je soavtor komentarja zakona");
+} else {
+  lectures_spec_alt1.push("");
+};
+
+// alternatives 1
+var de_uni_alt1 = `Diplomiral${gen_spec_text_alt1[0]} je na ${individual_scenarios_alt1[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt1[0].uni1_grade}.`;
+var de_exp_alt1 = `Po PDI je največ časa delal${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].experience_after_internship}. ${gen_spec_text_alt1[3]} ${individual_scenarios_alt1[0].experience_area}.`;
+var de_agegen_alt1 = `${individual_scenarios_alt1[0].gender}, star${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].age} let.`;
+var de_grade_alt1 = `Povprečna ocena PDI: ${individual_scenarios_alt1[0].pdi_grade}.`;
+var de_uni2_alt1 = `Zaključil${gen_spec_text_alt1[0]} je ${individual_scenarios_alt1[0].uni2}.`;
+var de_lectures_alt1 = `${individual_scenarios_alt1[0].education_publications}${lectures_spec_alt1}.`;
+var de_cv_alt1 = `Iz CV-ja izhaja še, da ${cv_extra_spec_alt1[0]} kandidat${gen_spec_text_alt1[1]} ${individual_scenarios_alt1[0].cv_extra}.`;
+
+// alternative 2 (shown on the right)
+
+// gender specific text
+var gen_spec_text_alt2 = [];
+
+if (individual_scenarios_alt2[0].gender == "Ženska") {
+  gen_spec_text_alt2.push("a");
+  gen_spec_text_alt2.push("ka");
+  gen_spec_text_alt2.push("njene");
+  gen_spec_text_alt2.push("Njene");
+} else {
+  gen_spec_text_alt2.push("");
+  gen_spec_text_alt2.push("");
+  gen_spec_text_alt2.push("njegove");
+  gen_spec_text_alt2.push("Njegove");
+};
+
+// CV extra specific text
+var cv_extra_spec_alt2 = [];
+
+if (individual_scenarios_alt2[0].cv_extra == "v zakonski zvezi in ima tri otroke, ki obiskujejo šolo") {
+  cv_extra_spec_alt2.push("je");
+} else {
+  cv_extra_spec_alt2.push("")
+};
+
+// "experience" specific text
+var lectures_spec_alt2 = [];
+
+if (individual_scenarios_alt2[0].education_publications == "Predava na Centru za izobraževanje v pravosodju (CIP). Objavil" && individual_scenarios_alt2[0].gender == "Ženska") {
+  lectures_spec_alt2.push("a je 12 člankov v reviji Pravna praksa; je soavtorica komentarja zakona");
+} else if (individual_scenarios_alt2[0].education_publications == "Predava na Centru za izobraževanje v pravosodju (CIP). Objavil" && individual_scenarios_alt2[0].gender == "Moški"){
+  lectures_spec_alt2.push(" je 12 člankov v reviji Pravna praksa; je soavtor komentarja zakona");
+} else {
+  lectures_spec_alt2.push("");
+};
+
+// alternatives 2
+var de_uni_alt2 = `Diplomiral${gen_spec_text_alt2[0]} je na ${individual_scenarios_alt2[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt2[0].uni1_grade}.`;
+var de_exp_alt2 = `Po PDI je največ časa delal${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].experience_after_internship}. ${gen_spec_text_alt2[3]} ${individual_scenarios_alt2[0].experience_area}.`;
+var de_agegen_alt2 = `${individual_scenarios_alt2[0].gender}, star${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].age} let.`;
+var de_grade_alt2 = `Povprečna ocena PDI: ${individual_scenarios_alt2[0].pdi_grade}.`;
+var de_uni2_alt2 = `Zaključil${gen_spec_text_alt2[0]} je ${individual_scenarios_alt2[0].uni2}.`;
+var de_lectures_alt2 = `${individual_scenarios_alt2[0].education_publications}${lectures_spec_alt2}.`;
+var de_cv_alt2 = `Iz CV-ja izhaja še, da ${cv_extra_spec_alt2[0]} kandidat${gen_spec_text_alt2[1]} ${individual_scenarios_alt2[0].cv_extra}.`;
+
+// randomize order of alternatives
+var alts1 = [de_uni_alt1, de_exp_alt1, de_agegen_alt1, de_grade_alt1, de_uni2_alt1, de_lectures_alt1];
+var alts2 = [de_uni_alt2, de_exp_alt2, de_agegen_alt2, de_grade_alt2, de_uni2_alt2, de_lectures_alt2];
+
+var nums = [0, 1, 2, 3, 4, 5];
+var random_nums = jsPsych.randomization.sampleWithoutReplacement(nums, 6);
+
+function reorderArray(array, order) {
+    // Create a new array based on the order of indices provided
+    return order.map(index => array[index]);
+}
+
+var reordered_alts1 = reorderArray(alts1, random_nums);
+var reordered_alts2 = reorderArray(alts2, random_nums);
+
+// main var
+var candidate_selection = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p><h4>Izberite najprimernejšo osebo za delovno mesto okrajne_ga kazenske_ga sodnice_ka.</h6></p>
+      <div class="container">
+        <!-- Column 1 -->
+        <div class="column">
+            <div class="grid-item"><p>${reordered_alts1[0]}</p></div>
+            <div class="grid-item"><p>${reordered_alts1[1]}</p></div>
+            <div class="grid-item"><p>${reordered_alts1[2]}</p></div>
+            <div class="grid-item"><p>${reordered_alts1[3]}</p></div>
+            <div class="grid-item"><p>${reordered_alts1[4]}</p></div>
+            <div class="grid-item"><p>${reordered_alts1[5]}</p></div>
+            <div class="grid-item"><p>${de_cv_alt1}</p></div>
+        </div>
+        <!-- Column 2 -->
+        <div class="column">
+            <div class="grid-item"><p>${reordered_alts2[0]}</p></div>
+            <div class="grid-item"><p>${reordered_alts2[1]}</p></div>
+            <div class="grid-item"><p>${reordered_alts2[2]}</p></div>
+            <div class="grid-item"><p>${reordered_alts2[3]}</p></div>
+            <div class="grid-item"><p>${reordered_alts2[4]}</p></div>
+            <div class="grid-item"><p>${reordered_alts2[5]}</p></div>
+            <div class="grid-item"><p>${de_cv_alt2}</p></div>
+        </div>
+    </div>
+  `,
+  choices: ["Oseba na levi", "Oseba na desni"]
+};
+timeline.push(candidate_selection);
+}
+
+ // Transition between conjoint survey and demographics
+ var transition_to_demographics = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+  <p>S prvim delom raziskave ste zaključili. Sledi še sklop demografskih vprašanj.</p>
+  `,
+  choices: ["Naprej"]
+ };
+ timeline.push(transition_to_demographics);
+
+ // Main demographics questions for all respondents
+ var demo_first3 = {
+  type: jsPsychSurveyMultiChoice,
+  button_label: "Naprej",
+  questions: [ 
+    {
+    prompt: "Kateri je vaš spol?",
+    name: "spol",
+    options: ["Ženski", "Moški", "Drugo", "Ne želim odgovoriti"]
+  },
+  {
+    prompt: "V katero starostno kategorijo spadate?",
+    name: "starost",
+    options: ["18-24 let", "25-34 let", "35-44 let", "45-54 let", "55-64 let", "65 let ali več", "Ne želim odgovoriti"]
+  },
+  {
+    prompt: "Izberite status, ki vas najboljše opiše.",
+    name: "status",
+    options: ["Študent/ka", "Zaposlen/a ali drugače delovno aktiven/a", "Upokojen/a"]
+  }
+  ]
+};
+timeline.push(demo_first3);
+
+// Demographics for students
+var trial_students = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Trenutno obiskujem ...",
+        name: "fakulteta",
+        options: ["1. ali 2. letnik pravne fakultete", "3., 4. ali 5. letnik pravne fakultete", "Drugo"]
+      },
+      {
+        prompt: "Moje stalno prebivališče je najbližje naslednjemu mestu:",
+        name: "studenti_prebivalisce",
+        options: ["Celje", "Koper", "Nova Gorica", "Ljubljana", "Kranj", "Krško", "Novo mesto", "Maribor", "Murska Sobota", "Ptuj", "Slovenj Gradec"]
+      }
+]
+}
+
+var if_students = {
+    timeline: [trial_students],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["status"] == "Študent/ka"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_students);
+
+// Demographics for retired people
+var trial_retirees = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Kje ste delali pred upokojitvijo?",
+        name: "upokojenci_delo",
+        options: ["V sodstvu", "V odvetništvu", "Na tožilstvu", "Na pravni fakulteti", "V notariatu", "Drugo"]
+      },
+      {
+        prompt: "Na področju katerega sodnega okrožja ste delali pred upokojitvijo?",
+        name: "upokojeni_prebivalisce",
+        options: ["Celje", "Koper", "Nova Gorica", "Ljubljana", "Kranj", "Krško", "Novo mesto", "Maribor", "Murska Sobota", "Ptuj", "Slovenj Gradec"]
+      }
+]
+}
+
+var if_retirees = {
+    timeline: [trial_retirees],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["status"] == "Upokojen/a"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_retirees);
+
+// Demographics for the working population
+var trial_workers = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Kje trenutno delate?",
+        name: "zaposleni_delo",
+        options: ["V sodstvu", "V odvetništvu", "Na tožilstvu", "Na pravni fakulteti", "V notariatu", "Drugo"]
+      },
+      {
+        prompt: "Na področju katerega sodnega okrožja trenutno delate?",
+        name: "zaposleni_prebivalisce",
+        options: ["Celje", "Koper", "Nova Gorica", "Ljubljana", "Kranj", "Krško", "Novo mesto", "Maribor", "Murska Sobota", "Ptuj", "Slovenj Gradec"]
+      }
+]
+}
+
+var if_workers = {
+    timeline: [trial_workers],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["status"] == "Zaposlen/a ali drugače delovno aktiven/a"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers);
+
+// FOR WORKERS
+
+// For workers judges
+var trial_workers_judges = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto na področju sodstva?",
+        name: "sodstvo_podrobnosti",
+        options: [
+          "Sodnik_ca na okrajnem sodišču",
+          "Sodnik_ca na okrožnem sodišču",
+          "Sodnik_ca na višjem sodišču",
+          "Sodnik_ca na vrhovnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na okrajnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI)  na okrožnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na višjem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na vrhovnem sodišču",
+          "Sodniški_a pripravnik_ca",
+          "Drugo"
+]
+      }
+]
+}
+
+var if_workers_judges = {
+    timeline: [trial_workers_judges],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_delo"] == "V sodstvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_judges);
+
+// For workers lawyers
+var trial_workers_lawyers = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto na področju odventištva?",
+        name: "odvetnistvo_podrobnosti",
+        options: [
+        "Odvetnik_ca",
+        "Odvetniški kandidat_ka",
+        "Odvetniški pripravnik_ca",
+        "Drugo"
+]
+      }
+]
+}
+
+var if_workers_lawyers = {
+    timeline: [trial_workers_lawyers],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_delo"] == "V odvetništvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_lawyers);
+
+// For workers prosecutors
+var trial_workers_prosecutors = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto na področju tožilstva?",
+        name: "tozilstvo_podrobnosti",
+        options: [
+      "Okrožni ali okrajni državni tožilec_ka",
+      "Višji ali vrhovni državni tožilec_ka",
+      "Višji pravosodni_a svetovalec _ka (PDI) / pravosodni_a svetnik_ca (PDI) na državnem tožilstvu",
+      "Tožilski pripravnik",
+      "Drugo"
+]
+      }
+]
+};
+
+var if_workers_prosecutors = {
+    timeline: [trial_workers_prosecutors],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_delo"] == "Na tožilstvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_prosecutors);
+
+// For workers profs
+var trial_workers_profs = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto znotraj pravne fakultete?",
+        name: "prof_podrobnosti",
+        options: [
+        "Visokošolski učitelj prava",
+        "Visokošolski sodelavec na področju prava",
+        "Drugo"
+]
+      }
+]
+};
+
+var if_workers_profs = {
+    timeline: [trial_workers_profs],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_delo"] == "Na pravni fakulteti"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_profs);
+
+// For workers notaries
+var trial_workers_notaries = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto znotraj notariata?",
+        name: "prof_podrobnosti",
+        options: [
+        "Notar_ka",
+        "Notarski pomočnik_ca",
+        "Notarski pripravnik_ca"
+]
+      }
+]
+};
+
+var if_workers_notaries = {
+    timeline: [trial_workers_notaries],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_delo"] == "V notariatu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_notaries);
+
+// For workers "others"
+var trial_workers_others = {
+  type: jsPsychSurveyText,
+  questions: [
+    {prompt: 'Katero je vaše področje zaposlitve?'}
+  ]
+}
+
+var if_trial_workers_others = {
+    timeline: [trial_workers_others],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_delo"] == "Drugo"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_trial_workers_others);
+
+// FOR RETIREES
+
+// For retired judges
+var trial_retired_judges = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto na področju sodstva?",
+        name: "sodstvo_podrobnosti",
+        options: [
+          "Sodnik_ca na okrajnem sodišču",
+          "Sodnik_ca na okrožnem sodišču",
+          "Sodnik_ca na višjem sodišču",
+          "Sodnik_ca na vrhovnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na okrajnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI)  na okrožnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na višjem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na vrhovnem sodišču",
+          "Sodniški_a pripravnik_ca",
+          "Drugo"
+]
+      }
+]
+}
+
+var if_retired_judges = {
+    timeline: [trial_retired_judges],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["upokojenci_delo"] == "V sodstvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_retired_judges);
+
+// For retired lawyers
+var trial_retired_lawyers = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: "",
+  trial_duration: 1,
+  on_finish: function(data) {
+                if (data.response === null) {
+                    data.response = {Q0: 'Placeholder'}; // Placeholder so I can refer back for the same number as in other cases
+                }
+            }
+};
+
+var if_retired_lawyers = {
+    timeline: [trial_retired_lawyers],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["upokojenci_delo"] == "V odvetništvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_retired_lawyers);
+
+// For retired prosecutors
+var trial_retired_prosecutors = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto na področju tožilstva?",
+        name: "tozilstvo_podrobnosti",
+        options: [
+      "Okrožni ali okrajni državni tožilec_ka",
+      "Višji ali vrhovni državni tožilec_ka",
+      "Drugo"
+]
+      }
+]
+};
+
+var if_retired_prosecutors = {
+    timeline: [trial_retired_prosecutors],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["upokojenci_delo"] == "Na tožilstvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_retired_prosecutors);
+
+// For retired profs
+var trial_retired_profs = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto znotraj pravne fakultete?",
+        name: "prof_podrobnosti",
+        options: [
+        "Visokošolski učitelj prava",
+        "Visokošolski sodelavec na področju prava",
+        "Drugo"
+]
+      }
+]
+};
+
+var if_retired_profs = {
+    timeline: [trial_retired_profs],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["upokojenci_delo"] == "Na pravni fakulteti"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_retired_profs);
+
+// For retired notaries
+var trial_retired_notaries = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto znotraj notariata?",
+        name: "prof_podrobnosti",
+        options: [
+        "Notar_ka",
+        "Notarski pomočnik_ca",
+        "Drugo"
+]
+      }
+]
+};
+
+var if_retired_notaries = {
+    timeline: [trial_retired_notaries],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["upokojenci_delo"] == "V notariatu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_retired_notaries);
+
+// For retired "others"
+var trial_retired_others = {
+  type: jsPsychSurveyText,
+  questions: [
+    {prompt: 'Katero je vaše področje zaposlitve?'}
+  ]
+}
+
+var if_trial_retired_others = {
+    timeline: [trial_retired_others],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["upokojenci_delo"] == "Drugo"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_trial_retired_others);
+
+// Demographics for both retirees and workers
+var trial_past_work = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Kje ste bili zaposleni pred opravljanjem trenutnega pravniškega poklica?",
+        name: "zaposleni_upokojeni_preteklo_delo",
+        options: ["V sodstvu", "V odvetništvu", "Na tožilstvu", "Na pravni fakulteti", "V notariatu", "Drugo"]
+      }   
+]
+}
+
+var trial_changing_fields = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: `
+        Kolikorat ste tekom svoje kariere zamenjali pravno področje dela?
+        <br>
+        Če ste npr. najprej delali na civilnem področju, zdaj pa delujete na kazenskem, označite »Enkrat«.
+        <br>
+        Če tekom kariere niste zamenjali pravnega področja dela, označite "Nikoli". 
+        `,
+        name: "delo_prejsnje",
+        options: ["Nikoli", "Enkrat", "Dvakrat", "Trikrat", "Štirikrat ali več"]
+      }
+]
+}
+
+var if_changing_fields = {
+    timeline: [trial_changing_fields, trial_past_work],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(3).values()[0]; // This should become last(4)
+        if (last_data.response["status"] == "Upokojen/a" || last_data.response["status"] == "Zaposlen/a ali drugače delovno aktiven/a"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_changing_fields)
+
+// FOR WORKERS AND RETIREES
+
+// For workers and retired judges
+var trial_workers_retired_judges = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je bilo vaše delovno mesto na področju sodstva pred opravljanjem trenutnega poklica?",
+        name: "sodstvo_podrobnosti",
+        options: [
+          "Sodnik_ca na okrajnem sodišču",
+          "Sodnik_ca na okrožnem sodišču",
+          "Sodnik_ca na višjem sodišču",
+          "Sodnik_ca na vrhovnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na okrajnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI)  na okrožnem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na višjem sodišču",
+          "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na vrhovnem sodišču",
+          "Sodniški_a pripravnik_ca",
+          "Drugo"
+]
+      }
+]
+}
+
+var if_workers_retired_judges = {
+    timeline: [trial_workers_retired_judges],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_upokojeni_preteklo_delo"] == "V sodstvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_retired_judges);
+
+// For workers and retired lawyers
+var trial_workers_retired_lawyers = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je bilo vaše delovno mesto na področju odvetništva pred opravljanjem trenutnega poklica?",
+        name: "odvetnistvo_podrobnosti",
+        options: [
+        "Odvetnik_ca",
+        "Odvetniški kandidat_ka",
+        "Odvetniški pripravnik_ca",
+        "Drugo"
+]
+      }
+]
+}
+
+var if_workers_retired_lawyers = {
+    timeline: [trial_workers_retired_lawyers],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_upokojeni_preteklo_delo"] == "V odvetništvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_retired_lawyers);
+
+// For workers and retired prosecutors
+var trial_workers_retired_prosecutors = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je bilo vaše delovno mesto na področju tožilstva pred opravljanjem trenutnega poklica?",
+        name: "tozilstvo_podrobnosti",
+        options: [
+      "Okrožni ali okrajni državni tožilec_ka",
+      "Višji ali vrhovni državni tožilec_ka",
+      "Višji pravosodni_a svetovalec _ka (PDI) / pravosodni_a svetnik_ca (PDI) na državnem tožilstvu",
+      "Tožilski pripravnik",
+      "Drugo"
+]
+      }
+]
+};
+
+var if_workers_retired_prosecutors = {
+    timeline: [trial_workers_retired_prosecutors],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_upokojeni_preteklo_delo"] == "Na tožilstvu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_retired_prosecutors);
+
+// For workers and retired profs
+var trial_workers_retired_profs = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je bilo vaše delovno mesto znotraj pravne fakultete pred opravljanjem trenutnega poklica?",
+        name: "prof_podrobnosti",
+        options: [
+        "Visokošolski učitelj prava",
+        "Visokošolski sodelavec na področju prava",
+        "Drugo"
+]
+      }
+]
+};
+
+var if_workers_retired_profs = {
+    timeline: [trial_workers_retired_profs],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_upokojeni_preteklo_delo"] == "Na pravni fakulteti"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_retired_profs);
+
+// For workers and retired notaries
+var trial_workers_retired_notaries = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: "Katero je vaše delovno mesto znotraj notariata?",
+        name: "prof_podrobnosti",
+        options: [
+        "Notar_ka",
+        "Notarski pomočnik_ca",
+        "Notarski pripravnik_ca"
+]
+      }
+]
+};
+
+var if_workers_retired_notaries = {
+    timeline: [trial_workers_retired_notaries],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_upokojeni_preteklo_delo"] == "V notariatu"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_workers_retired_notaries);
+
+// For workers and retired "others"
+var trial_workers_retired_others = {
+  type: jsPsychSurveyText,
+  questions: [
+    {prompt: 'Katero je vaše področje zaposlitve?'}
+  ]
+}
+
+var if_trial_workers_retired_others = {
+    timeline: [trial_workers_retired_others],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(1).values()[0];
+        if (last_data.response["zaposleni_upokojeni_preteklo_delo"] == "Drugo"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_trial_workers_retired_others);
+
+// define final page
+var final_page = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+  <p>Z raziskavo ste zaključili.</p>
+  <p>Najlepša hvala za sodelovanje.</p>
+  `
+};
+timeline.push(final_page)
+
+// start the experiment
+jsPsych.run(timeline);
+
+})
+.catch(error => {
+    console.error('Error loading the JSON data:', error);
+});
+
+  </script>
+
+</body>
+
+</html>
