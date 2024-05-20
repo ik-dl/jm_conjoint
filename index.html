@@ -10,21 +10,6 @@
     <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
     <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
 
-    <!-- <style>
-      .column {
-          width: 50%;  /* Each column takes up half the width of its container */
-          float: left;  /* This will align them side by side */
-          padding: 10px;  /* Padding for some internal spacing */
-          box-sizing: border-box; /* Includes padding and border in the width */
-      }
-
-      p {
-    height: 5%; /* Fixed height */
-    overflow: auto; /* Adds scrollbars if content exceeds dimensions */
-}
-
-  </style> -->
-
 <style>
     .container {
         display: grid;
@@ -47,6 +32,13 @@
         align-items: center;
         height: 140px; /* Adjust the height as needed to ensure uniform row height */
     }
+    .jspsych-display-element {
+    font-size: 24px;  /* Set the font size to 20 pixels */
+    }
+    .jspsych-btn {
+    font-size: 20px; /* Increasing the text size inside the button */
+    margin: 0 50px; /* Adds 10 pixels of space to the left and right of each button */
+  }
 </style>
 
   </head>
@@ -69,7 +61,7 @@ var timeline = [];
 // Fetch JSON data. Make sure jspsych vars are included in the function, so the experiment does not start before the data is loaded.
 var scenarios; // This will store the fetched JSON data
 
-fetch("https://res.cloudinary.com/irresearch/raw/upload/v1715603307/myojdwft7g3bfua5cd1e.json")
+fetch("https://res.cloudinary.com/irresearch/raw/upload/v1716196443/scenarios_v3.json")
 .then(response => response.json())
 .then(data => {
     scenarios = data; // Store the data in the global variable
@@ -94,17 +86,15 @@ var conjoint_instructions = {
     type: jsPsychHtmlButtonResponse, 
     stimulus: `
     <p style="width:800px; text-align:justify">
-      Raziskava poteka na naslednji način. Na zaslonu se bo prikazal opis dveh kandidatk_ov za službo okrajne_ga kazenske_ga sodnice_ka.
+      Raziskava poteka na naslednji način. Na zaslonu se bo prikazal opis dveh oseb, ki kandidirata za službo okrajnega kazenskega sodnika oz. sodnice.
       Opis je sestavljen iz več lastnosti, ki so na vsaki strani prikazane v naključnem vrstnem redu.
-      Vaša naloga je, da na podlagi opisov izmed dveh kandidatov_k izberete tistega_o, 
-      ki se vam zdi <b>primernejši_a za službo okrajne_ga kazenske_ga sodnice_ka</b>.
+      Vaša naloga je, da na podlagi opisov izberete tisto osebo, ki se vam zdi <b>primernejša za službo okrajnega kazenskega sodnika oz. sodnice</b>.
       <br><br>
-      Če se vam zdi primernejši_a kandidat_ka opisan_a na levi strani zaslona, kliknite na gumb "Oseba na levi"; in obratno, 
-      če se vam zdi primernejši_a kandidat_ka opisan_a na desni strani zaslona, kliknite na gumb "Oseba na desni." 
+      Če se vam zdi primernejša oseba, opisana na levi strani zaslona, kliknite na gumb "Oseba na levi"; 
+      in obratno, če se vam zdi primernejša oseba, opisana na desni strani zaslona, kliknite na gumb "Oseba na desni."
       <br><br>
-      Ko se odločite za eno izmed oseb, 
-      se bo na novi strani prikazal nov par kandidatov_k, med katerima se morate ponovno odločiti. 
-      Na ta način nadaljujete, dokler niste izbrali primernejšega_o kandidata_ko za vse prikazane pare kandidatov_k.
+      Ko se odločite za eno izmed oseb, se bo na novi strani prikazal opis novega para oseb, med katerima se morate ponovno odločiti. 
+      Na ta način nadaljujete, dokler niste izbrali primernejše osebe za službo za vse prikazane pare.
       <br><br>
       Ko ste pripravljeni za začetek raziskave, kliknite na gumb "Naprej".
     </p>
@@ -158,11 +148,11 @@ if (individual_scenarios_alt1[0].education_publications == "Predava na Centru za
 };
 
 // alternatives 1
-var de_uni_alt1 = `Diplomiral${gen_spec_text_alt1[0]} je na ${individual_scenarios_alt1[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt1[0].uni1_grade}.`;
+var de_uni_alt1 = `Diplomiral${gen_spec_text_alt1[0]} je ${individual_scenarios_alt1[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt1[0].uni1_grade}.`;
 var de_exp_alt1 = `Po PDI je največ časa delal${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].experience_after_internship}. ${gen_spec_text_alt1[3]} ${individual_scenarios_alt1[0].experience_area}.`;
 var de_agegen_alt1 = `${individual_scenarios_alt1[0].gender}, star${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].age} let.`;
 var de_grade_alt1 = `Povprečna ocena PDI: ${individual_scenarios_alt1[0].pdi_grade}.`;
-var de_uni2_alt1 = `Zaključil${gen_spec_text_alt1[0]} je ${individual_scenarios_alt1[0].uni2}.`;
+var de_uni2_alt1 = `Uspešno je opravil${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].uni2}.`;
 var de_lectures_alt1 = `${individual_scenarios_alt1[0].education_publications}${lectures_spec_alt1}.`;
 var de_cv_alt1 = `Iz CV-ja izhaja še, da ${cv_extra_spec_alt1[0]} kandidat${gen_spec_text_alt1[1]} ${individual_scenarios_alt1[0].cv_extra}.`;
 
@@ -204,11 +194,11 @@ if (individual_scenarios_alt2[0].education_publications == "Predava na Centru za
 };
 
 // alternatives 2
-var de_uni_alt2 = `Diplomiral${gen_spec_text_alt2[0]} je na ${individual_scenarios_alt2[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt2[0].uni1_grade}.`;
+var de_uni_alt2 = `Diplomiral${gen_spec_text_alt2[0]} je ${individual_scenarios_alt2[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt2[0].uni1_grade}.`;
 var de_exp_alt2 = `Po PDI je največ časa delal${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].experience_after_internship}. ${gen_spec_text_alt2[3]} ${individual_scenarios_alt2[0].experience_area}.`;
 var de_agegen_alt2 = `${individual_scenarios_alt2[0].gender}, star${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].age} let.`;
 var de_grade_alt2 = `Povprečna ocena PDI: ${individual_scenarios_alt2[0].pdi_grade}.`;
-var de_uni2_alt2 = `Zaključil${gen_spec_text_alt2[0]} je ${individual_scenarios_alt2[0].uni2}.`;
+var de_uni2_alt2 = `Uspešno je opravil${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].uni2}.`;
 var de_lectures_alt2 = `${individual_scenarios_alt2[0].education_publications}${lectures_spec_alt2}.`;
 var de_cv_alt2 = `Iz CV-ja izhaja še, da ${cv_extra_spec_alt2[0]} kandidat${gen_spec_text_alt2[1]} ${individual_scenarios_alt2[0].cv_extra}.`;
 
@@ -231,7 +221,7 @@ var reordered_alts2 = reorderArray(alts2, random_nums);
 var candidate_selection = {
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <p><h4>Izberite najprimernejšo osebo za delovno mesto okrajne_ga kazenske_ga sodnice_ka.</h6></p>
+    <p><h4>Izberite najprimernejšo osebo za delovno mesto okrajnega kazenskega sodnika oz. sodnice.</h4></p>
       <div class="container">
         <!-- Column 1 -->
         <div class="column">
@@ -286,9 +276,9 @@ timeline.push(candidate_selection);
     options: ["18-24 let", "25-34 let", "35-44 let", "45-54 let", "55-64 let", "65 let ali več", "Ne želim odgovoriti"]
   },
   {
-    prompt: "Izberite status, ki vas najboljše opiše.",
+    prompt: "Izberite status, ki vas najbolje opisuje.",
     name: "status",
-    options: ["Študent/ka", "Zaposlen/a ali drugače delovno aktiven/a", "Upokojen/a"]
+    options: ["Študent_ka", "Zaposlen_a ali drugače delovno aktiven_a", "Upokojen_a"]
   }
   ]
 };
@@ -318,7 +308,7 @@ var if_students = {
         // get the data from the previous trial,
         // and check which key was pressed
         var last_data = jsPsych.data.get().last(1).values()[0];
-        if (last_data.response["status"] == "Študent/ka"){
+        if (last_data.response["status"] == "Študent_ka"){
           return true
         } else {
           return false
@@ -333,7 +323,7 @@ var trial_retirees = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Kje ste delali pred upokojitvijo?",
+        prompt: "Pred upokojitvijo sem nazadnje delal_a:",
         name: "upokojenci_delo",
         options: ["V sodstvu", "V odvetništvu", "Na tožilstvu", "Na pravni fakulteti", "V notariatu", "Drugo"]
       },
@@ -349,7 +339,7 @@ var if_retirees = {
     timeline: [trial_retirees],
     conditional_function: function(){
         var last_data = jsPsych.data.get().last(1).values()[0];
-        if (last_data.response["status"] == "Upokojen/a"){
+        if (last_data.response["status"] == "Upokojen_a"){
           return true
         } else {
           return false
@@ -382,7 +372,7 @@ var if_workers = {
         // get the data from the previous trial,
         // and check which key was pressed
         var last_data = jsPsych.data.get().last(1).values()[0];
-        if (last_data.response["status"] == "Zaposlen/a ali drugače delovno aktiven/a"){
+        if (last_data.response["status"] == "Zaposlen_a ali drugače delovno aktiven_a"){
           return true
         } else {
           return false
@@ -399,7 +389,7 @@ var trial_workers_judges = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto na področju sodstva?",
+        prompt: "Na področju sodstva delam kot:",
         name: "sodstvo_podrobnosti",
         options: [
           "Sodnik_ca na okrajnem sodišču",
@@ -410,7 +400,7 @@ var trial_workers_judges = {
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI)  na okrožnem sodišču",
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na višjem sodišču",
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na vrhovnem sodišču",
-          "Sodniški_a pripravnik_ca",
+          "Sodniški pripravnik_ca",
           "Drugo"
 ]
       }
@@ -436,7 +426,7 @@ var trial_workers_lawyers = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto na področju odventištva?",
+        prompt: "Na področju odvetništva delam kot:",
         name: "odvetnistvo_podrobnosti",
         options: [
         "Odvetnik_ca",
@@ -467,7 +457,7 @@ var trial_workers_prosecutors = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto na področju tožilstva?",
+        prompt: "Na področju tožilstva delam kot:",
         name: "tozilstvo_podrobnosti",
         options: [
       "Okrožni ali okrajni državni tožilec_ka",
@@ -499,7 +489,7 @@ var trial_workers_profs = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto znotraj pravne fakultete?",
+        prompt: "Na pravni fakulteti delam kot:",
         name: "prof_podrobnosti",
         options: [
         "Visokošolski učitelj prava",
@@ -529,7 +519,7 @@ var trial_workers_notaries = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto znotraj notariata?",
+        prompt: "Na notariatu delam kot:",
         name: "prof_podrobnosti",
         options: [
         "Notar_ka",
@@ -582,7 +572,7 @@ var trial_retired_judges = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto na področju sodstva?",
+        prompt: "Na področju sodstva sem delal_a kot:",
         name: "sodstvo_podrobnosti",
         options: [
           "Sodnik_ca na okrajnem sodišču",
@@ -593,7 +583,7 @@ var trial_retired_judges = {
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI)  na okrožnem sodišču",
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na višjem sodišču",
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na vrhovnem sodišču",
-          "Sodniški_a pripravnik_ca",
+          "Sodniški pripravnik_ca",
           "Drugo"
 ]
       }
@@ -644,7 +634,7 @@ var trial_retired_prosecutors = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto na področju tožilstva?",
+        prompt: "Na področju tožilstva sem delal_a kot:",
         name: "tozilstvo_podrobnosti",
         options: [
       "Okrožni ali okrajni državni tožilec_ka",
@@ -674,7 +664,7 @@ var trial_retired_profs = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto znotraj pravne fakultete?",
+        prompt: "Na pravni fakulteti sem delal_a kot:",
         name: "prof_podrobnosti",
         options: [
         "Visokošolski učitelj prava",
@@ -704,7 +694,7 @@ var trial_retired_notaries = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto znotraj notariata?",
+        prompt: "Na notariatu sem delal_a kot:",
         name: "prof_podrobnosti",
         options: [
         "Notar_ka",
@@ -732,7 +722,7 @@ timeline.push(if_retired_notaries);
 var trial_retired_others = {
   type: jsPsychSurveyText,
   questions: [
-    {prompt: 'Katero je vaše področje zaposlitve?'}
+    {prompt: 'Katero je bilo vaše zadnje področje zaposlitve pred upokojitvijo?'}
   ]
 }
 
@@ -755,43 +745,25 @@ var trial_past_work = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Kje ste bili zaposleni pred opravljanjem trenutnega pravniškega poklica?",
+        prompt: "Kje ste bili zaposleni pred opravljanjem pravniškega poklica iz prejšnjega vprašanja?",
         name: "zaposleni_upokojeni_preteklo_delo",
         options: ["V sodstvu", "V odvetništvu", "Na tožilstvu", "Na pravni fakulteti", "V notariatu", "Drugo"]
       }   
 ]
 }
 
-var trial_changing_fields = {
-    type: jsPsychSurveyMultiChoice,
-    button_label: "Naprej",
-    questions: [
-      {
-        prompt: `
-        Kolikorat ste tekom svoje kariere zamenjali pravno področje dela?
-        <br>
-        Če ste npr. najprej delali na civilnem področju, zdaj pa delujete na kazenskem, označite »Enkrat«.
-        <br>
-        Če tekom kariere niste zamenjali pravnega področja dela, označite "Nikoli". 
-        `,
-        name: "delo_prejsnje",
-        options: ["Nikoli", "Enkrat", "Dvakrat", "Trikrat", "Štirikrat ali več"]
-      }
-]
-}
-
-var if_changing_fields = {
-    timeline: [trial_changing_fields, trial_past_work],
+var if_past_work = {
+    timeline: [trial_past_work],
     conditional_function: function(){
-        var last_data = jsPsych.data.get().last(3).values()[0]; // This should become last(4)
-        if (last_data.response["status"] == "Upokojen/a" || last_data.response["status"] == "Zaposlen/a ali drugače delovno aktiven/a"){
+        var last_data = jsPsych.data.get().last(3).values()[0]; 
+        if (last_data.response["status"] == "Upokojen_a" || last_data.response["status"] == "Zaposlen_a ali drugače delovno aktiven_a"){
           return true
         } else {
           return false
         };
     }
 };
-timeline.push(if_changing_fields)
+timeline.push(if_past_work);
 
 // FOR WORKERS AND RETIREES
 
@@ -801,7 +773,7 @@ var trial_workers_retired_judges = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je bilo vaše delovno mesto na področju sodstva pred opravljanjem trenutnega poklica?",
+        prompt: "V sodstvu sem delal_a kot:",
         name: "sodstvo_podrobnosti",
         options: [
           "Sodnik_ca na okrajnem sodišču",
@@ -812,7 +784,7 @@ var trial_workers_retired_judges = {
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI)  na okrožnem sodišču",
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na višjem sodišču",
           "Višji pravosodni svetovalec _ka (PDI) / pravosodni svetnik_ca (PDI) na vrhovnem sodišču",
-          "Sodniški_a pripravnik_ca",
+          "Sodniški pripravnik_ca",
           "Drugo"
 ]
       }
@@ -838,7 +810,7 @@ var trial_workers_retired_lawyers = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je bilo vaše delovno mesto na področju odvetništva pred opravljanjem trenutnega poklica?",
+        prompt: "V odvetništvu sem delal_a kot:",
         name: "odvetnistvo_podrobnosti",
         options: [
         "Odvetnik_ca",
@@ -869,7 +841,7 @@ var trial_workers_retired_prosecutors = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je bilo vaše delovno mesto na področju tožilstva pred opravljanjem trenutnega poklica?",
+        prompt: "V tožilstvu sem delal_a kot:",
         name: "tozilstvo_podrobnosti",
         options: [
       "Okrožni ali okrajni državni tožilec_ka",
@@ -901,7 +873,7 @@ var trial_workers_retired_profs = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je bilo vaše delovno mesto znotraj pravne fakultete pred opravljanjem trenutnega poklica?",
+        prompt: "Na pravni fakulteti sem delal_a kot:",
         name: "prof_podrobnosti",
         options: [
         "Visokošolski učitelj prava",
@@ -931,7 +903,7 @@ var trial_workers_retired_notaries = {
     button_label: "Naprej",
     questions: [
       {
-        prompt: "Katero je vaše delovno mesto znotraj notariata?",
+        prompt: "Na notariatu sem delal_a kot:",
         name: "prof_podrobnosti",
         options: [
         "Notar_ka",
@@ -959,7 +931,7 @@ timeline.push(if_workers_retired_notaries);
 var trial_workers_retired_others = {
   type: jsPsychSurveyText,
   questions: [
-    {prompt: 'Katero je vaše področje zaposlitve?'}
+    {prompt: 'Katero je bilo vaše področje zaposlitve pred opravljanjem pravniškega poklica iz prejšnjega vprašanja?'}
   ]
 }
 
@@ -975,6 +947,37 @@ var if_trial_workers_retired_others = {
     }
 };
 timeline.push(if_trial_workers_retired_others);
+
+var trial_changing_fields = {
+    type: jsPsychSurveyMultiChoice,
+    button_label: "Naprej",
+    questions: [
+      {
+        prompt: `
+        Kolikorat ste tekom svoje kariere zamenjali pravno področje dela?
+        <br>
+        Če ste npr. najprej delali na civilnem področju, kasneje pa ste bili aktivni kazenskem, označite »Enkrat«.
+        <br>
+        Če tekom kariere niste zamenjali pravnega področja dela, označite "Nikoli". 
+        `,
+        name: "delo_prejsnje",
+        options: ["Nikoli", "Enkrat", "Dvakrat", "Trikrat", "Štirikrat ali več"]
+      }
+]
+}
+
+var if_changing_fields = {
+    timeline: [trial_changing_fields],
+    conditional_function: function(){
+        var last_data = jsPsych.data.get().last(5).values()[0]; 
+        if (last_data.response["status"] == "Upokojen_a" || last_data.response["status"] == "Zaposlen_a ali drugače delovno aktiven_a"){
+          return true
+        } else {
+          return false
+        };
+    }
+};
+timeline.push(if_changing_fields);
 
 // define final page
 var final_page = {
