@@ -39,27 +39,28 @@
     font-size: 20px; /* Increasing the text size inside the button */
     margin: 0 50px; /* Adds 10 pixels of space to the left and right of each button */
   }
-      /* Media queries */
-    @media (max-width: 768px) { /* Targets screens with a maximum width of 768px */
-        .container {
-            grid-template-columns: 1fr; /* Stacks columns into a single column */
-            width: 90%; /* Increases the width to 90% for smaller screens */
-        }
-        .container p {
-            font-size: 16px; /* Decreases the font size for smaller screens */
-        }
-        .jspsych-display-element {
-            font-size: 18px; /* Decreases the font size */
-        }
-        .jspsych-btn {
-            font-size: 18px; /* Decreases the text size */
-            margin: 0 20px; /* Decreases the margin for smaller screens */
-        }
-        .grid-item {
-            height: auto; /* Allows height to adjust automatically */
-            padding: 10px; /* Adds padding for better touch targets */
-        }
+  
+@media (max-width: 768px) {
+    /* Adjust padding and margin to use vertical space better */
+    .grid-item {
+        padding: 20px; /* More padding can make the content less cramped */
+        margin-bottom: 20px; /* Adds more space between grid items */
+        height: auto; /* Allows dynamic height based on content */
     }
+
+    /* Increasing button size for better touch interaction */
+    .jspsych-btn {
+        font-size: 20px; /* Keeps or increases the button text size */
+        padding: 12px 24px; /* Makes buttons larger and easier to tap */
+        margin: 0 20px; /* Adjusted margin for better spacing on small screens */
+    }
+
+    /* Enhance text readability and space utilization */
+    .container p {
+        font-size: 18px; /* Slightly larger text for better readability */
+        margin-bottom: 20px; /* Increases the bottom margin of paragraphs */
+    }
+  };
 </style>
 
   </head>
