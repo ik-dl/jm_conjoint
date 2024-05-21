@@ -17,11 +17,11 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px; /* Adjust the gap between columns as needed */
-        width: 80%; /* Set the container width to 75% */
+        width: 75%; /* Set the container width to 75% */
         margin: 0 auto; /* Center the container */
     }
     .container p {
-        font-size: 20px; /* Adjust the font size as needed */
+        font-size: 18px; /* Adjust the font size as needed */
         color: black; /* Adjust the color as needed */
         margin: 0;
         padding: 10px;
@@ -32,13 +32,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 140px; /* Adjust the height as needed to ensure uniform row height */
+        height: 110px; /* Adjust the height as needed to ensure uniform row height */
     }
     .jspsych-display-element {
-    font-size: 20px;  /* Set the font size to 20 pixels */
+    font-size: 18px;  /* Set the font size to 20 pixels */
     }
     .jspsych-btn {
-    font-size: 20px; /* Increasing the text size inside the button */
+    font-size: 18px; /* Increasing the text size inside the button */
     margin: 0 50px; /* Adds 10 pixels of space to the left and right of each button */
   }
   
@@ -120,13 +120,17 @@ var conjoint_instructions = {
     stimulus: `
    <p style="text-align:justify">
       Raziskava poteka na naslednji način. Na zaslonu se bo prikazal opis dveh oseb, ki kandidirata za službo okrajnega kazenskega sodnika oz. sodnice.
+      <br>
       Opis je sestavljen iz več lastnosti, ki so na vsaki strani prikazane v naključnem vrstnem redu.
+      <br>
       Vaša naloga je, da na podlagi opisov izberete tisto osebo, ki se vam zdi <b>primernejša za službo okrajnega kazenskega sodnika oz. sodnice</b>.
       <br><br>
-      Če se vam zdi primernejša oseba, opisana na levi strani zaslona, kliknite na gumb "Oseba na levi"; 
-      in obratno, če se vam zdi primernejša oseba, opisana na desni strani zaslona, kliknite na gumb "Oseba na desni."
+      Če se vam zdi primernejša oseba, opisana na levi strani zaslona, kliknite na gumb "Oseba na levi"; in obratno,
+      <br>
+      če se vam zdi primernejša oseba, opisana na desni strani zaslona, kliknite na gumb "Oseba na desni."
       <br><br>
-      Ko se odločite za eno izmed oseb, se bo na novi strani prikazal opis novega para oseb, med katerima se morate ponovno odločiti. 
+      Ko se odločite za eno izmed oseb, se bo na novi strani prikazal opis novega para oseb, med katerima se morate ponovno odločiti.
+      <br>
       Na ta način nadaljujete, dokler niste izbrali primernejše osebe za službo za vse prikazane pare.
       <br><br>
       Ko ste pripravljeni za začetek raziskave, kliknite na gumb "Naprej".
@@ -184,8 +188,7 @@ if (individual_scenarios_alt1[0].education_publications == "Predava na Centru za
 var de_uni_alt1 = `Diplomiral${gen_spec_text_alt1[0]} je ${individual_scenarios_alt1[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt1[0].uni1_grade}.`;
 var de_exp_alt1 = `Po PDI je največ časa delal${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].experience_after_internship}. ${gen_spec_text_alt1[3]} ${individual_scenarios_alt1[0].experience_area}.`;
 var de_agegen_alt1 = `${individual_scenarios_alt1[0].gender}, star${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].age} let.`;
-var de_grade_alt1 = `Povprečna ocena PDI: ${individual_scenarios_alt1[0].pdi_grade}.`;
-var de_uni2_alt1 = `Uspešno je opravil${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].uni2}.`;
+var de_uni2_alt1 = `Uspešno je opravil${gen_spec_text_alt1[0]} ${individual_scenarios_alt1[0].uni2} (povprečna ocena PDI: ${individual_scenarios_alt1[0].pdi_grade}).`;
 var de_lectures_alt1 = `${individual_scenarios_alt1[0].education_publications}${lectures_spec_alt1}.`;
 var de_cv_alt1 = `Iz CV-ja izhaja še, da ${cv_extra_spec_alt1[0]} kandidat${gen_spec_text_alt1[1]} ${individual_scenarios_alt1[0].cv_extra}.`;
 
@@ -230,17 +233,16 @@ if (individual_scenarios_alt2[0].education_publications == "Predava na Centru za
 var de_uni_alt2 = `Diplomiral${gen_spec_text_alt2[0]} je ${individual_scenarios_alt2[0].uni1_institution} s povprečno oceno ${individual_scenarios_alt2[0].uni1_grade}.`;
 var de_exp_alt2 = `Po PDI je največ časa delal${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].experience_after_internship}. ${gen_spec_text_alt2[3]} ${individual_scenarios_alt2[0].experience_area}.`;
 var de_agegen_alt2 = `${individual_scenarios_alt2[0].gender}, star${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].age} let.`;
-var de_grade_alt2 = `Povprečna ocena PDI: ${individual_scenarios_alt2[0].pdi_grade}.`;
-var de_uni2_alt2 = `Uspešno je opravil${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].uni2}.`;
+var de_uni2_alt2 = `Uspešno je opravil${gen_spec_text_alt2[0]} ${individual_scenarios_alt2[0].uni2} (povprečna ocena PDI: ${individual_scenarios_alt2[0].pdi_grade}).`;
 var de_lectures_alt2 = `${individual_scenarios_alt2[0].education_publications}${lectures_spec_alt2}.`;
 var de_cv_alt2 = `Iz CV-ja izhaja še, da ${cv_extra_spec_alt2[0]} kandidat${gen_spec_text_alt2[1]} ${individual_scenarios_alt2[0].cv_extra}.`;
 
 // randomize order of alternatives
-var alts1 = [de_uni_alt1, de_exp_alt1, de_agegen_alt1, de_grade_alt1, de_uni2_alt1, de_lectures_alt1];
-var alts2 = [de_uni_alt2, de_exp_alt2, de_agegen_alt2, de_grade_alt2, de_uni2_alt2, de_lectures_alt2];
+var alts1 = [de_uni_alt1, de_exp_alt1, de_agegen_alt1, de_uni2_alt1, de_lectures_alt1];
+var alts2 = [de_uni_alt2, de_exp_alt2, de_agegen_alt2, de_uni2_alt2, de_lectures_alt2];
 
-var nums = [0, 1, 2, 3, 4, 5];
-var random_nums = jsPsych.randomization.sampleWithoutReplacement(nums, 6);
+var nums = [0, 1, 2, 3, 4];
+var random_nums = jsPsych.randomization.sampleWithoutReplacement(nums, 5);
 
 function reorderArray(array, order) {
     // Create a new array based on the order of indices provided
@@ -263,7 +265,6 @@ var candidate_selection = {
             <div class="grid-item"><p>${reordered_alts1[2]}</p></div>
             <div class="grid-item"><p>${reordered_alts1[3]}</p></div>
             <div class="grid-item"><p>${reordered_alts1[4]}</p></div>
-            <div class="grid-item"><p>${reordered_alts1[5]}</p></div>
             <div class="grid-item"><p>${de_cv_alt1}</p></div>
         </div>
         <!-- Column 2 -->
@@ -273,7 +274,6 @@ var candidate_selection = {
             <div class="grid-item"><p>${reordered_alts2[2]}</p></div>
             <div class="grid-item"><p>${reordered_alts2[3]}</p></div>
             <div class="grid-item"><p>${reordered_alts2[4]}</p></div>
-            <div class="grid-item"><p>${reordered_alts2[5]}</p></div>
             <div class="grid-item"><p>${de_cv_alt2}</p></div>
         </div>
     </div>
